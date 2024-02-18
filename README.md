@@ -1,6 +1,9 @@
 # Ask Your Data
 Ask any questions about your PDF or CSV documents powered by [OpenAI](https://platform.openai.com/docs/overview) LLMs and [PandasAI](https://github.com/Sinaptik-AI/pandas-ai).
-
+<p float="left">
+  <img src="media/AppScreenshot.png?raw=true" width="95%"/> 
+<p/>
+  
 ## Setup
 Clone this repository from terminal
 ```
