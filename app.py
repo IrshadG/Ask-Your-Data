@@ -1,15 +1,9 @@
-# conda activate POP
-# streamlit run RunPOP/POC/app.py
-# Draw a pie chart for each size
-
-from keys import HUGGINGFACEHUB_API_TOKEN, OPENAI_API_KEY
+# Imports
+from keys import OPENAI_API_KEY
 import streamlit as st
 import pandas as pd
 from pandasai import SmartDataframe
 from pandasai.llm import OpenAI as pai_OpenAI
-import numpy as np
-import autogen
-import autogen.retrieve_utils as utils
 import os
 import tempfile
 from langchain.agents import create_csv_agent
@@ -23,11 +17,11 @@ from PyPDF2 import PdfReader
 from pandasai.responses.streamlit_response import StreamlitResponse
 from pandasai.responses.response_parser import ResponseParser
 
-os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
+os.environ['OPENAI_API_KEY'] = OPENAI_API_KEY
 
 # Configure Streamlit page
-st.set_page_config(page_title="Ask your CSV")
-st.header("Ask your CSV")
+st.set_page_config(page_title="Ask-Your-Data")
+st.header("Ask-Your-Data")
 
 def read_pdf(file):
     reader = PdfReader(file) 
@@ -38,6 +32,7 @@ def read_pdf(file):
     cont = cont.replace("\n", " ")
     return cont
 
+# Ask data query
 def ask_pandasai(df, question:str):
     llm = pai_OpenAI(api_token=OPENAI_API_KEY)
     sdf = SmartDataframe(df, config={"llm": llm, 
@@ -48,6 +43,7 @@ def ask_pandasai(df, question:str):
     response = sdf.chat(question)
     return response
 
+# CSV query
 def csv_reader(file, user_input):
     # Create a temporary file to store the uploaded CSV data
     with tempfile.NamedTemporaryFile(mode='w+', suffix=".csv", delete=False) as f:
@@ -64,6 +60,7 @@ def csv_reader(file, user_input):
         print(response)
         return response
 
+# PDF query
 def pdf_reader(file, user_input):
     
     text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
@@ -89,7 +86,7 @@ def pdf_reader(file, user_input):
 file = st.file_uploader("upload your csv file", type=["csv", "pdf"])
 if file is not None:    
     # Ask the user to input a question
-    user_input = st.text_input("Ask your data:")
+    user_input = st.text_input("Ask a question:")
 
     if user_input and st.button('Submit'):
         if file.name[-4:] == '.csv':
